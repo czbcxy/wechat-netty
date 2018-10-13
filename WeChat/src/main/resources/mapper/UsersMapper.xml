@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.czb.wechat.dao.UsersMapper">
+    <resultMap id="BaseResultMap" type="com.czb.wechat.pojo.Users">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="face_image" jdbcType="VARCHAR" property="faceImage"/>
+        <result column="face_image_big" jdbcType="VARCHAR" property="faceImageBig"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="qrcode" jdbcType="VARCHAR" property="qrcode"/>
+        <result column="cid" jdbcType="VARCHAR" property="cid"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, username, password, face_image, face_image_big, nickname, qrcode, cid
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectUserByusername" parameterType="com.czb.wechat.pojo.Users" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where username = #{username,jdbcType=VARCHAR}
+    </select>
+
+
+    <insert id="saveUsers" parameterType="com.czb.wechat.pojo.Users">
+    insert into users (
+          id, username, password, face_image, face_image_big, nickname, qrcode, cid
+      )
+    values (
+           #{id,jdbcType=VARCHAR},
+           #{username,jdbcType=VARCHAR},
+           #{password,jdbcType=VARCHAR},
+           #{faceImage,jdbcType=VARCHAR},
+           #{faceImageBig,jdbcType=INTEGER},
+           #{nickname,jdbcType=TIMESTAMP},
+           #{qrcode,jdbcType=TIMESTAMP},
+           #{cid,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+    <update id="updateNicknameById" parameterType="com.czb.wechat.pojo.Users">
+        update users
+        <set>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>
