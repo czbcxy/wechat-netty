@@ -1,0 +1,31 @@
+{
+	"index.html": {
+		"resources": [
+			"footpage/wechat-chatlist.html"
+		],
+		"refer": [
+			"footpage/wechat-chatlist.html",
+			"footpage/wechat-content.html",
+			"footpage/wechat-discover.html",
+			"footpage/wechat-me.html"
+		]
+	},
+	"login.html": {
+		"refer": [
+			"login.html",
+			"index.html"
+		]
+	},
+	"footpage/wechat-me.html": {
+		"refer": [
+			"login.html",
+			"footpage/info/NickName.html"
+		]
+	},
+	"footpage/info/NickName.html": {
+		"refer": [
+			"index.html",
+			"footpage/wechat-me.html"
+		]
+	}
+}

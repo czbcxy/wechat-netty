@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="Images/regOrlogin/util.css">
+		<link rel="stylesheet" type="text/css" href="Images/regOrlogin/main.css">
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			window.onload=function(){
+				//判断用户是否登录过
+				if(app.getUserGlobalInfo() != null) {
+					window.location.href = "index.html";
+//					mui.openWindow("index.html", "index.html");
+			   	}
+			}
+		</script>
+		<style>
+			.p-t-85 {
+				padding-top: 10px;
+			}
+			
+			.p-b-70 {
+				padding-bottom: 35px;
+			}
+			
+			.m-t-85 {
+				margin-top: 15px;
+			}
+			
+			.container-login100 {
+				padding: 25px;
+			}
+			/*toast信息提示*/
+			
+			.mui-toast-container {
+				bottom: 50% !important;
+			}
+			
+			.mui-toast-message {
+				opacity: 0.6;
+				color: #fff;
+				width: 180px;
+				padding: 70px 5px 10px 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="container-login100">
+				<div class="wrap-login100 p-t-85 p-b-20">
+					<form id="userform">
+						<span class="login100-form-title p-b-70">
+							<h5>WeChat mini</h5>
+						</span>
+						<span class="login100-form-avatar">
+							<img id="img_login_face" src="Images/regOrlogin/userInfo.png" alt="那年夏天恍如隔世">
+						</span>
+						<div class="wrap-input100 validate-input m-t-85 m-b-35">
+							<input class="input100" type="text" id="username" name="username" placeholder="用户名">
+							<span class="focus-input100"></span>
+						</div>
+						<div class="wrap-input100 validate-input m-b-50">
+							<input class="input100" type="password" id="txt_password" name="password" placeholder="密码">
+							<span class="focus-input100"></span>
+						</div>
+						<div class="container-login100-form-btn">
+							<button type="submit" id="registOrLogin" class="login100-form-btn">
+								登录/注册
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.plusReady(function() {
+				//判断用户是否登录过
+//				if(app.getUserGlobalInfo() != null) {
+//					mui.openWindow("index.html", "index.html");
+//				}
+				var username = document.getElementById("username");
+				var tpassword = document.getElementById("txt_password");
+				var userform = document.getElementById("userform");
+				//给整个form表单编订一个监听用用户提交事件
+				userform.addEventListener("submit", function(e) {
+					if(!app.isNotNull(username.value)) {
+						username.focus();
+					} else if(!app.isNotNull(tpassword.value)) {
+						tpassword.focus();
+					} else {
+						if(username.value.length > 10) {
+							app.showToast("用户名不能超过10", "error");
+							return false;
+						} else if(tpassword.value.length > 10) {
+							app.showToast("密码不能超过10", "error");
+							return false;
+						}
+						//获取手机唯一ID，cid
+						var cid = plus.push.getClientInfo().clientid;
+						//与后端交互
+						mui.ajax(app.baseUrl + '/user/regOrlogin', {
+							data: {
+								username: username.value,
+								password: tpassword.value,
+								cid: cid
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								if(data.status == 200) {
+									//设置全局页面
+									app.setUserGlobalInfo(data.data);
+									//页面跳转
+									mui.openWindow("index.html", "index.html");
+								} else {
+									app.showToast(data.msg, "error");
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
+							}
+						});
+
+					};
+					//阻止默认事件，阻止表单提交。
+					e.preventDefault();
+				});
+			})
+		</script>
+	</body>
+
+</html>

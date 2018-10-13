@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>WeChat</title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<link rel="stylesheet" type="text/css" href="font_wechat/iconfont.css" />
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function() {
+				plus.navigator.setStatusBarStyle("light");
+				plus.navigator.setStatusBarBackground("#2F3332");
+			});
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<h1 class="mui-title title-color"><b>微信</b></h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" tabindex="0">
+				<span class="mui-icon iconfont icon-weixin"></span>
+				<span class="mui-tab-label">微信</span>
+			</a>
+			<a class="mui-tab-item" tabindex="1">
+				<span class="mui-icon iconfont icon-tongxunlu"></span>
+				<span class="mui-tab-label">通讯录</span>
+			</a>
+			<a class="mui-tab-item" tabindex="2">
+				<span class="mui-icon iconfont icon-faxianzhinanzhen"></span>
+				<span class="mui-tab-label">发现</span>
+			</a>
+			<a class="mui-tab-item" tabindex="3">
+				<span class="mui-icon iconfont icon-mine"></span>
+				<span class="mui-tab-label">我</span>
+			</a>
+		</nav>
+		<script type="text/javascript">
+			var wechatArray = [{
+					pageId: 'wechat-chatlist.html',
+					pageUrl: 'footpage/wechat-chatlist.html'
+				},
+				{
+					pageId: 'wechat-content.html',
+					pageUrl: 'footpage/wechat-content.html'
+				},
+				{
+					pageId: 'wechat-discover.html',
+					pageUrl: 'footpage/wechat-discover.html'
+				},
+				{
+					pageId: 'wechat-me.html',
+					pageUrl: 'footpage/wechat-me.html'
+				}
+			];
+			var wechatStyle = {
+				top: "44px",
+				bottom: "50px"
+			}
+			mui.plusReady(function() {
+				//禁止安卓的返回登录页面
+				mui.back = function() {
+					return false;
+				};
+				//获取当前webview对象
+				var indexWebView = plus.webview.currentWebview();
+				//向webview对象中添加view页面
+				for(var i = 0; i < wechatArray.length; i++) {
+					var viewPage = plus.webview.create(wechatArray[i].pageUrl,
+						wechatArray[i].pageId,
+						wechatStyle);
+					//创建页面后隐藏
+					viewPage.hide();
+					//追加每一个子页面到当前主页面
+					indexWebView.append(viewPage);
+				}
+				//默认展示首页
+				plus.webview.show(wechatArray[0].pageId);
+				//根据点击进行不同的跳转
+				// 不同页面进行绑定 tap == onclike
+				mui(".mui-bar-tab").on("tap", "a", function() {
+					var id = this.getAttribute("tabindex");
+					//传值给详情页面，通知加载新数据
+					plus.webview.show(wechatArray[id].pageId, "fade-in", 200)
+					//隐藏其他页面
+					for(var i = 0; i < wechatArray.length; i++) {
+						if(i != id) {
+							plus.webview.hide(wechatArray[i].pageId, "fade-out", "200");
+						}
+					}
+				})
+			})
+		</script>
+
+	</body>
+
+</html>

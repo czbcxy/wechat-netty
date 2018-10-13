@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<span class="mui-pull-right mui-icon mui-icon-arrowright" style="line-height: 42px;color: lightgray;margin-left: 3px;"> </span>
+						<img class="mui-media-object mui-pull-right" src="../Images/regOrlogin/userInfo.png">
+						<div class="mui-media-body" style="line-height: 42px; font-size: 15px;">
+							头像
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;" id="nickUsername">
+						<span class="mui-pull-right mui-icon mui-icon-arrowright" style="color: lightgray;margin-left: 3px;"> </span>
+						<span id="me_nickUsername" class="mui-pull-right" style="color: darkslategray;font-size: 14px;"></span>
+						<div class="mui-media-body" style="font-size: 15px;">
+							昵称
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;" id="username">
+						<span id="me_username" class="mui-pull-right" style="color: darkslategray;font-size: 14px;"></span>
+						<div class="mui-media-body" style="font-size: 15px;">
+							微信号
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<span class="mui-pull-right mui-icon mui-icon-arrowright" style="color: lightgray;margin-left: 3px;"> </span>
+						<img class="mui-media-object mui-pull-right" src="../Images/qrcode.png" style="height: 20px; max-width: 20px;">
+						<div class="mui-media-body" style="font-size: 15px;">
+							我的二维码
+						</div>
+					</a>
+				</li>
+			</ul>
+			<br />
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media" style="text-align: center;">
+					<a href="javascript:;">
+						<div id="callback" class="mui-media-body">
+							退出
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function() {
+				//获得当前页面，封装信息
+				var meviewpage = plus.webview.currentWebview();
+				meviewpage.addEventListener("show", function() {
+					referenceUserInfo();
+				});
+				//修改昵称
+				var me_nickUsername = document.getElementById("nickUsername");
+				me_nickUsername.addEventListener("tap", function() {
+					mui.openWindow("./info/NickName.html", "nickName");
+				});
+
+				//用户退出
+				var back = document.getElementById("callback");
+				back.addEventListener("tap", function() {
+					app.loginback();
+					//跳转页面
+					mui.openWindow("../login.html", "login.html")
+				})
+
+				//用户信息变化时刷新
+				window.addEventListener('refresh', function(e) { //执行刷新
+					referenceUserInfo();
+				});
+
+			});
+
+			function referenceUserInfo() {
+				var userInfo = app.getUserGlobalInfo();
+				if(userInfo != null) {
+					var faceImage = userInfo.faceImage;
+					var nickname = userInfo.nickname;
+					var username = userInfo.username;
+					var me_username = document.getElementById("me_username");
+					var me_nickUsername = document.getElementById("me_nickUsername");
+					me_nickUsername.innerHTML = nickname;
+					me_username.innerHTML = username;
+				}
+			}
+		</script>
+	</body>
+
+</html>
+
+<style type="text/css">
+
+</style>
